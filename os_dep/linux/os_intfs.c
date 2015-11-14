@@ -949,7 +949,8 @@ unsigned int rtw_classify8021d(struct sk_buff *skb)
 	return dscp >> 5;
 }
 
-static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb)
+static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb,
+			    void *accel_priv, select_queue_fallback_t fallback)
 {
 	_adapter	*padapter = rtw_netdev_priv(dev);
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
@@ -1130,6 +1131,7 @@ void rtw_unregister_netdevs(struct dvobj_priv *dvobj)
 
 	for (i=0;i<dvobj->iface_nums;i++) {
 		struct net_device *pnetdev = NULL;
+		struct mlme_priv *pmlmepriv;
 
 		padapter = dvobj->padapters[i];
 
@@ -1137,8 +1139,12 @@ void rtw_unregister_netdevs(struct dvobj_priv *dvobj)
 			continue;
 
 		pnetdev = padapter->pnetdev;
+		pmlmepriv = &padapter->mlmepriv;
 
 		if((padapter->DriverState != DRIVER_DISAPPEAR) && pnetdev) {
+			if(pmlmepriv->sme_state==CFG80211_SME_CONNECTED)
+				cfg80211_disconnected(pnetdev, 0, NULL, 0, true, GFP_ATOMIC);
+
 			unregister_netdev(pnetdev); //will call netdev_close()
 			rtw_proc_remove_one(pnetdev);
 		}

@@ -14,7 +14,7 @@ EXTRA_CFLAGS += -Wno-unused-parameter
 EXTRA_CFLAGS += -Wno-unused-function
 EXTRA_CFLAGS += -Wno-unused
 
-EXTRA_CFLAGS += -Wno-uninitialized
+EXTRA_CFLAGS += -Wno-uninitialized -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 
 EXTRA_CFLAGS += -I$(src)/include
 
@@ -167,7 +167,7 @@ _OS_INTFS_FILES :=	os_dep/osdep_service.o \
 			os_dep/linux/mlme_linux.o \
 			os_dep/linux/recv_linux.o \
 			os_dep/linux/ioctl_cfg80211.o \
-			os_dep/linux/rtw_android.o
+# 			os_dep/linux/rtw_android.o
 
 
 _HAL_INTFS_FILES :=	hal/hal_intf.o \

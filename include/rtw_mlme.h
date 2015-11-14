@@ -393,10 +393,17 @@ struct tdls_info{
 #endif		
 };
 
+enum sme_state {
+	SME_DISCONNECTED,
+	CFG80211_SME_CONNECTING,
+	CFG80211_SME_CONNECTED
+};
+
 struct mlme_priv {
 
 	_lock	lock;
 	sint	fw_state;	//shall we protect this variable? maybe not necessarily...
+	enum sme_state sme_state;
 
 	u8	to_join; //flag
 	#ifdef CONFIG_LAYER2_ROAMING
